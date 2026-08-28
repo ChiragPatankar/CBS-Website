@@ -1,0 +1,538 @@
+@import "tailwindcss";
+
+/* ============================================================
+   Design tokens — single source of truth
+   Derived from docs/02-design-system.md + src/styles/tokens/tokens.json
+   Dark-first. Light values are tokenized for a later theming pass.
+   ============================================================ */
+@theme {
+  /* Fonts (wired to next/font variables in layout.tsx) */
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-archivo), var(--font-inter), sans-serif;
+  --font-mono: var(--font-jet), ui-monospace, SFMono-Regular, monospace;
+
+  /* ── Brand: "Ember & Ink" ──────────────────────────────────────────────
+     A two-stop metal ramp (ember → copper → brass) rather than one flat
+     accent: heat cooling into metal is what profit looks like, and it gives
+     gradients somewhere to travel. Emerald is retained deliberately as the
+     ONLY cool hue in the system and is reserved for the semantic "up / profit"
+     meaning — one cool note stops the page reading monotone.             */
+  --color-brand: #f0562d;
+  --color-brand-2: #d9773f;
+  --color-brand-3: #e8b06a;
+  --color-profit: #10b981;
+  --color-signal: #f5a524;
+
+  /* Surfaces & text — warm-biased darks, not neutral greys, so the whole
+     page reads as lit by the ember rather than merely tinted with it. */
+  --color-bg: #0a0908;
+  --color-surface-1: #120f0e;
+  --color-surface-2: #1b1615;
+  --color-surface-3: #251e1c;
+  --color-border: #2c2422;
+  --color-border-strong: #3f3431;
+  --color-fg: #f8f5f3;
+  --color-muted: #a9a09b;
+  /* Lifted from the old #6b7079 to clear 4.5:1 on the new ground (WCAG AA,
+     required by docs/02-design-system.md) — it carries real label text. */
+  --color-faint: #8a7d75;
+
+  /* Radius */
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 24px;
+  --radius-2xl: 32px;
+
+  /* Fluid type scale */
+  --text-eyebrow: 0.8125rem;
+  --text-eyebrow--line-height: 1;
+  --text-eyebrow--letter-spacing: 0.14em;
+  --text-body-lg: clamp(1.0625rem, 0.4vw + 1rem, 1.25rem);
+  --text-body-lg--line-height: 1.6;
+  --text-h3: clamp(1.375rem, 1vw + 1rem, 1.75rem);
+  --text-h3--line-height: 1.2;
+  --text-h2: clamp(1.875rem, 2.6vw + 1rem, 2.75rem);
+  --text-h2--line-height: 1.1;
+  --text-h1: clamp(2.25rem, 4vw + 1rem, 3.5rem);
+  --text-h1--line-height: 1.06;
+  --text-display: clamp(2.75rem, 6vw + 1rem, 5.25rem);
+  --text-display--line-height: 1.01;
+  --text-display--letter-spacing: -0.02em;
+
+  /* Motion — mirrored in src/lib/motion/tokens.ts, keep the two in sync */
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-standard: cubic-bezier(0.2, 0, 0, 1);
+  --ease-in-out-soft: cubic-bezier(0.65, 0, 0.35, 1);
+
+  --dur-instant: 100ms;
+  --dur-fast: 180ms;
+  --dur-base: 280ms;
+  --dur-slow: 500ms;
+  --dur-reveal: 600ms;
+  --dur-ambient: 16s;
+
+  /* Animations */
+  --animate-marquee: marquee 42s linear infinite;
+  --animate-marquee-reverse: marquee-reverse 42s linear infinite;
+  --animate-float: float 7s ease-in-out infinite;
+  --animate-spin-slow: spin 44s linear infinite;
+  --animate-aurora: aurora 16s ease-in-out infinite alternate;
+}
+
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+@keyframes marquee-reverse {
+  from { transform: translateX(-50%); }
+  to { transform: translateX(0); }
+}
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-12px); }
+}
+@keyframes aurora {
+  0% { transform: translate3d(0, 0, 0) scale(1); opacity: 0.7; }
+  100% { transform: translate3d(4%, -6%, 0) scale(1.15); opacity: 1; }
+}
+
+/* Route change. Incoming only — App Router gives no hook to hold an outgoing
+   tree, and every workaround for that costs a deliberate blank frame plus a
+   stacking context around <main>. `both` fill mode means reduced-motion users
+   (whose animation-duration is forced to ~0) land on the final state instantly
+   rather than being left at opacity 0. */
+/* ============================================================
+   Hero atmosphere
+   All transform/opacity. Parallax offsets come from --mx/--my, written by a
+   rAF-throttled pointer listener in hero-atmosphere.tsx.
+   ============================================================ */
+.atm-aurora {
+  position: absolute;
+  border-radius: 9999px;
+  will-change: transform;
+}
+.atm-aurora-a {
+  inset: -22% -10% auto auto;
+  width: 78%;
+  height: 78%;
+  background: radial-gradient(
+    closest-side,
+    color-mix(in oklab, #f0562d 34%, transparent),
+    transparent 72%
+  );
+  animation: atm-drift-a 34s ease-in-out infinite alternate;
+  translate: calc(var(--mx) * 26px) calc(var(--my) * 18px);
+}
+.atm-aurora-b {
+  inset: auto auto -30% -14%;
+  width: 66%;
+  height: 66%;
+  background: radial-gradient(
+    closest-side,
+    color-mix(in oklab, #d9773f 26%, transparent),
+    transparent 70%
+  );
+  animation: atm-drift-b 46s ease-in-out infinite alternate;
+  translate: calc(var(--mx) * -18px) calc(var(--my) * -12px);
+}
+.atm-aurora-c {
+  inset: 12% auto auto 34%;
+  width: 46%;
+  height: 46%;
+  background: radial-gradient(
+    closest-side,
+    color-mix(in oklab, #e8b06a 16%, transparent),
+    transparent 68%
+  );
+  animation: atm-drift-c 58s ease-in-out infinite alternate;
+  translate: calc(var(--mx) * 12px) calc(var(--my) * 9px);
+}
+
+.atm-rays {
+  position: absolute;
+  inset: -30% -20% auto -20%;
+  height: 90%;
+  background: repeating-linear-gradient(
+    102deg,
+    transparent 0 8rem,
+    color-mix(in oklab, #ffd9c2 4%, transparent) 8rem 8.6rem,
+    transparent 8.6rem 17rem
+  );
+  mask-image: radial-gradient(ellipse 70% 60% at 60% 0%, #000 10%, transparent 78%);
+  animation: atm-rays 40s linear infinite;
+  will-change: transform;
+}
+
+.atm-grid {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(to right, color-mix(in oklab, var(--color-border-strong) 46%, transparent) 1px, transparent 1px),
+    linear-gradient(to bottom, color-mix(in oklab, var(--color-border-strong) 46%, transparent) 1px, transparent 1px);
+  background-size: 72px 72px;
+  mask-image: radial-gradient(ellipse 85% 70% at 50% 25%, #000 8%, transparent 76%);
+  animation: atm-grid 26s linear infinite;
+  will-change: transform;
+}
+
+.atm-motes {
+  position: absolute;
+  inset: 0;
+}
+.atm-mote {
+  position: absolute;
+  width: calc(var(--s) * 1px);
+  height: calc(var(--s) * 1px);
+  border-radius: 9999px;
+  background: color-mix(in oklab, #ffd9c2 70%, transparent);
+  box-shadow: 0 0 6px color-mix(in oklab, #f0562d 60%, transparent);
+  animation: atm-mote var(--d) ease-in-out var(--delay) infinite;
+  will-change: transform, opacity;
+}
+
+.atm-noise {
+  position: absolute;
+  inset: 0;
+  opacity: 0.035;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+.atm-vignette {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse 95% 80% at 50% 45%, transparent 42%, var(--color-bg) 96%);
+}
+
+@keyframes atm-drift-a {
+  from { transform: translate3d(0, 0, 0) scale(1); }
+  to   { transform: translate3d(-5%, 5%, 0) scale(1.14); }
+}
+@keyframes atm-drift-b {
+  from { transform: translate3d(0, 0, 0) scale(1.08); }
+  to   { transform: translate3d(7%, -4%, 0) scale(1); }
+}
+@keyframes atm-drift-c {
+  from { transform: translate3d(0, 0, 0) scale(0.94); opacity: 0.7; }
+  to   { transform: translate3d(-8%, 6%, 0) scale(1.18); opacity: 1; }
+}
+@keyframes atm-rays {
+  from { transform: translate3d(0, 0, 0); }
+  to   { transform: translate3d(17rem, 0, 0); }
+}
+@keyframes atm-grid {
+  from { transform: translate3d(0, 0, 0); }
+  to   { transform: translate3d(0, -72px, 0); }
+}
+@keyframes atm-mote {
+  0%, 100% { transform: translate3d(0, 0, 0); opacity: 0.15; }
+  50%      { transform: translate3d(14px, -26px, 0); opacity: 0.85; }
+}
+
+/* Sheen that travels across the board once on entrance and again on hover. */
+@keyframes board-sheen {
+  from { transform: translate3d(-140%, 0, 0) skewX(-18deg); }
+  to   { transform: translate3d(260%, 0, 0) skewX(-18deg); }
+}
+
+/* Conic border light that orbits the dashboard edge. */
+@keyframes border-orbit {
+  to { rotate: 1turn; }
+}
+
+@keyframes live-pulse {
+  0%,
+  100% {
+    opacity: 1;
+    scale: 1;
+  }
+  50% {
+    opacity: 0.4;
+    scale: 0.78;
+  }
+}
+
+@keyframes page-enter {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 8px, 0);
+  }
+}
+
+/* ============================================================
+   Base layer
+   ============================================================ */
+@layer base {
+  * {
+    border-color: var(--color-border);
+  }
+  html {
+    color-scheme: dark;
+    scroll-behavior: smooth;
+    -webkit-tap-highlight-color: transparent;
+  }
+  body {
+    background-color: var(--color-bg);
+    color: var(--color-fg);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    overflow-x: hidden;
+  }
+  ::selection {
+    background-color: color-mix(in oklab, var(--color-brand) 32%, transparent);
+    color: #fff;
+  }
+  :focus-visible {
+    outline: none;
+    box-shadow:
+      0 0 0 2px var(--color-bg),
+      0 0 0 4px var(--color-brand);
+    border-radius: 4px;
+  }
+  h1, h2, h3, h4 {
+    font-family: var(--font-display);
+    letter-spacing: -0.01em;
+  }
+
+  /* Scrollbar */
+  ::-webkit-scrollbar { width: 10px; height: 10px; }
+  ::-webkit-scrollbar-track { background: var(--color-bg); }
+  ::-webkit-scrollbar-thumb {
+    background: var(--color-surface-3);
+    border-radius: 9999px;
+    border: 2px solid var(--color-bg);
+  }
+  ::-webkit-scrollbar-thumb:hover { background: var(--color-border-strong); }
+}
+
+/* ============================================================
+   Utilities & materials
+   ============================================================ */
+@layer utilities {
+  .text-gradient {
+    background-image: linear-gradient(110deg, #fff 0%, #ffdcc6 34%, #f0562d 70%, #d9773f 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  /* The signature ramp. `.aurora-gradient` is kept as an alias so the existing
+     components keep working; new code should use `.ember-gradient`, which is
+     what it actually is now. */
+  .ember-gradient,
+  .aurora-gradient {
+    background-image: linear-gradient(120deg, #f0562d 0%, #d9773f 48%, #e8b06a 100%);
+  }
+  .glass {
+    background-color: color-mix(in oklab, var(--color-surface-2) 66%, transparent);
+    backdrop-filter: blur(16px) saturate(140%);
+    -webkit-backdrop-filter: blur(16px) saturate(140%);
+    border: 1px solid color-mix(in oklab, var(--color-border-strong) 60%, transparent);
+  }
+  /* Backdrop blur re-rasterizes whatever sits behind it on every scroll frame.
+     On a phone GPU a 16px radius across a full-width fixed header is a real
+     cost for an effect nobody can see at that size. */
+  @media (max-width: 640px) {
+    .glass {
+      backdrop-filter: blur(8px) saturate(130%);
+      -webkit-backdrop-filter: blur(8px) saturate(130%);
+    }
+  }
+
+  /* Underline that wipes in from the left rather than snapping on. Animating
+     background-size on a text-sized box is cheap; `text-decoration` cannot be
+     animated directionally. */
+  .link-underline {
+    background-image: linear-gradient(currentColor, currentColor);
+    background-repeat: no-repeat;
+    background-position: 0 100%;
+    background-size: 0% 1px;
+    transition: background-size var(--dur-base) var(--ease-standard);
+  }
+  .link-underline:hover,
+  .link-underline:focus-visible {
+    background-size: 100% 1px;
+  }
+  .glow-brand {
+    box-shadow: 0 0 60px -12px color-mix(in oklab, var(--color-brand) 60%, transparent);
+  }
+  .grid-bg {
+    background-image:
+      linear-gradient(to right, color-mix(in oklab, var(--color-border) 55%, transparent) 1px, transparent 1px),
+      linear-gradient(to bottom, color-mix(in oklab, var(--color-border) 55%, transparent) 1px, transparent 1px);
+    background-size: 64px 64px;
+    -webkit-mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, #000 40%, transparent 100%);
+    mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, #000 40%, transparent 100%);
+  }
+  .tabular {
+    font-variant-numeric: tabular-nums;
+  }
+
+  .page-enter {
+    animation: page-enter 220ms var(--ease-out-expo) both;
+  }
+
+  /* ── Shared interaction motion ──────────────────────────────────────────
+     Written as plain CSS rather than Tailwind arbitrary values: `duration-[--dur-fast]`
+     is not valid v4 syntax (bracket values don't take a bare custom property),
+     so those classes silently generated nothing and every control fell back to
+     no transition at all. Naming them here also keeps one motion vocabulary. */
+  .ui-transition {
+    transition-property: translate, scale, rotate, background-color, border-color,
+      color, box-shadow, filter, opacity;
+    transition-duration: var(--dur-fast);
+    transition-timing-function: var(--ease-standard);
+  }
+  /* Tailwind v4 emits `translate` / `scale` as standalone properties rather than
+     one `transform` shorthand, so this composes with `hover:-translate-y-px`
+     instead of overwriting it. */
+  .ui-press:active {
+    scale: 0.975;
+    transition-duration: var(--dur-instant);
+  }
+  /* Header: deliberately omits backdrop-filter. Transitioning it re-rasterizes
+     the blur across the full viewport on every frame of the tween; the blur is
+     toggled discretely by adding/removing `.glass`. */
+  .header-transition {
+    transition-property: background-color, border-color, box-shadow;
+    transition-duration: var(--dur-base);
+    transition-timing-function: var(--ease-standard);
+  }
+
+  /* ── 3D staging for the channel stack ───────────────────────────────────
+     Perspective sits on the stage so every panel shares one vanishing point;
+     put it on the panels individually and each gets its own, which reads as
+     a pile of unrelated cards instead of one receding stack.              */
+  .stage-3d {
+    perspective: 1500px;
+    perspective-origin: 50% 42%;
+  }
+  .panel-3d {
+    transform-style: preserve-3d;
+    backface-visibility: hidden;
+    /* Kills the sub-pixel text shimmer Chrome produces on rotated layers. */
+    -webkit-font-smoothing: antialiased;
+  }
+  /* Animated border light. A conic gradient rotates behind the board and is
+     masked to a 1px ring, so the glow travels the edge without the card itself
+     ever repainting. */
+  .border-orbit {
+    position: relative;
+    isolation: isolate;
+  }
+  .border-orbit::before {
+    content: "";
+    position: absolute;
+    inset: -1px;
+    border-radius: inherit;
+    padding: 1px;
+    background: conic-gradient(
+      from 0deg,
+      transparent 0deg 250deg,
+      color-mix(in oklab, var(--color-brand) 85%, transparent) 300deg,
+      color-mix(in oklab, var(--color-brand-3) 90%, transparent) 330deg,
+      transparent 360deg
+    );
+    -webkit-mask:
+      linear-gradient(#000 0 0) content-box,
+      linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    animation: border-orbit 9s linear infinite;
+    z-index: -1;
+  }
+
+  /* Glass reflection sweep across the board surface. */
+  .board-sheen::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: linear-gradient(
+      90deg,
+      transparent,
+      color-mix(in oklab, #ffd9c2 9%, transparent),
+      transparent
+    );
+    width: 42%;
+    animation: board-sheen 7s var(--ease-in-out-soft) 1.6s infinite;
+  }
+
+  /* Soft inner top-edge highlight — the tell that a surface is glass rather
+     than a flat translucent rectangle. */
+  .inner-lip {
+    box-shadow:
+      inset 0 1px 0 0 color-mix(in oklab, #ffd9c2 14%, transparent),
+      inset 0 -1px 0 0 rgb(0 0 0 / 0.4);
+  }
+
+  /* Primary CTA gets a travelling highlight, so the one action on the page has
+     a heartbeat the secondary action does not. */
+  .cta-shimmer {
+    position: relative;
+    overflow: hidden;
+  }
+  .cta-shimmer::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    width: 38%;
+    background: linear-gradient(90deg, transparent, rgb(255 255 255 / 0.28), transparent);
+    animation: board-sheen 4.5s var(--ease-in-out-soft) 1s infinite;
+  }
+
+  /* Live status dot. Staggered per row via an inline --i so the board reads as
+     several independent channels rather than one synchronised blink. */
+  .live-dot {
+    animation: live-pulse 2.6s var(--ease-in-out-soft) infinite;
+    animation-delay: calc(var(--i, 0) * 320ms);
+  }
+
+  /* Ember rail that wipes down the left edge of a row on hover. scaleY from a
+     top origin, so it grows rather than fading — cheaper and more deliberate. */
+  .row-rail {
+    transform-origin: top;
+    scale: 1 0;
+    transition: scale var(--dur-base) var(--ease-out-expo);
+  }
+  .group\/row:hover .row-rail,
+  .group\/row:focus-within .row-rail {
+    scale: 1 1;
+  }
+
+  /* Warm key light raking across a panel edge — stands in for the lighting
+     that photography would otherwise provide. */
+  .panel-lit {
+    background-image: linear-gradient(
+      160deg,
+      color-mix(in oklab, var(--color-brand) 9%, transparent) 0%,
+      transparent 42%
+    );
+  }
+}
+
+/* ============================================================
+   Reduced motion
+   Ambient loops and scroll-jacking are the vestibular triggers, so those go.
+   Colour/opacity transitions deliberately stay: they carry hover, focus and
+   disabled state, and blanket-killing transition-duration (as this block used
+   to) removes that feedback entirely — an accessibility regression of its own.
+   Transform-based motion is handled per component via framer-motion's
+   useReducedMotion(); see src/components/primitives/reveal.tsx.
+   ============================================================ */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    /* Load-bearing: without this, staggered CSS animations keep their delays and
+       elements appear one-by-one with zero-duration animations. */
+    animation-delay: 0ms !important;
+    animation-iteration-count: 1 !important;
+  }
+  html {
+    scroll-behavior: auto !important;
+  }
+}

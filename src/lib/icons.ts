@@ -1,0 +1,77 @@
+import {
+  BadgeCheck,
+  BarChart3,
+  Boxes,
+  BrainCircuit,
+  Cloud,
+  Code2,
+  Database,
+  Gauge,
+  Globe2,
+  LineChart,
+  Mail,
+  MapPin,
+  Megaphone,
+  MessageSquare,
+  Package,
+  Palette,
+  RefreshCw,
+  Rocket,
+  Search,
+  Server,
+  ShoppingCart,
+  Smartphone,
+  Sparkles,
+  Store,
+  Target,
+  TrendingUp,
+  Truck,
+  Users,
+  Wand2,
+  Workflow,
+  Zap,
+  type LucideIcon,
+} from "lucide-react";
+
+/**
+ * Name → component registry.
+ *
+ * Content files store the *name*; this resolves it. That indirection is what
+ * lets Server Components pass content into Client Components — passing the
+ * component itself is not serialisable across the boundary.
+ */
+export const icons = {
+  "badge-check": BadgeCheck,
+  "bar-chart": BarChart3,
+  boxes: Boxes,
+  brain: BrainCircuit,
+  cloud: Cloud,
+  code: Code2,
+  database: Database,
+  gauge: Gauge,
+  globe: Globe2,
+  "line-chart": LineChart,
+  mail: Mail,
+  "map-pin": MapPin,
+  megaphone: Megaphone,
+  message: MessageSquare,
+  package: Package,
+  palette: Palette,
+  refresh: RefreshCw,
+  rocket: Rocket,
+  search: Search,
+  server: Server,
+  cart: ShoppingCart,
+  smartphone: Smartphone,
+  sparkles: Sparkles,
+  store: Store,
+  target: Target,
+  trending: TrendingUp,
+  truck: Truck,
+  users: Users,
+  wand: Wand2,
+  workflow: Workflow,
+  zap: Zap,
+} as const satisfies Record<string, LucideIcon>;
+
+export type IconName = keyof typeof icons;
