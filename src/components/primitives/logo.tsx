@@ -13,16 +13,27 @@ import { cn } from "@/lib/utils";
  * the plate is gone. The lockup now sits directly on the page, which is what it
  * was drawn for.
  *
- * The supplied file was 1536×1024 with the lockup occupying a band in the middle —
+ * ── Why the asset is 576×90 ─────────────────────────────────────────────────
+ * The supplied file was 1536×1024 with the lockup occupying a band in the middle:
  * 80% of the canvas was empty alpha. Since the intrinsic box is what `height`
  * scales, that padding would have shrunk the visible mark to roughly a fifth of
- * its intended size. The asset in `public/` is cropped to the inked bounding box,
- * hence the 1432×224 dimensions below: they must stay in step with the file or
- * the aspect ratio breaks.
+ * its intended size, so `public/` holds a version cropped to the inked bounding
+ * box and then resized.
+ *
+ * 576×90 is exactly 3× the 192×30 this paints at, which covers dpr-3 screens.
+ * The size matters more than usual here: the Cloudflare Workers target runs with
+ * `images.unoptimized`, so there is no `/_next/image` resizing at request time —
+ * the browser downloads this file verbatim. Shipping the 1432px master would have
+ * cost 58 kB for a 192px logo.
+ *
+ * These dimensions must stay in step with the file or the aspect ratio breaks.
  */
+const ASSET_W = 576;
+const ASSET_H = 90;
+
 export function Logo({
   className,
-  /** Rendered height in px. Width follows the asset's 1432×224 ratio (≈6.39:1). */
+  /** Rendered height in px. Width follows the asset's 576×90 ratio (6.4:1). */
   height = 30,
   priority = false,
 }: {
@@ -30,19 +41,18 @@ export function Logo({
   height?: number;
   priority?: boolean;
 }) {
-  // Width is derived rather than guessed so `sizes` stays truthful when a caller
-  // changes `height`. Without a `sizes` hint next/image falls back to the device
-  // breakpoints and ships a variant several times wider than the 192px this
-  // actually paints at.
-  const width = Math.round((height * 1432) / 224);
+  // Derived rather than hardcoded so this stays correct if a caller changes
+  // `height`. It also keeps the `sizes` hint truthful, which still matters on
+  // any target where the optimizer IS active.
+  const width = Math.round((height * ASSET_W) / ASSET_H);
 
   return (
     <span className={cn("inline-flex items-center", className)}>
       <Image
         src="/logos/brand/crossborder.webp"
         alt="CrossBorder Business Solution"
-        width={1432}
-        height={224}
+        width={ASSET_W}
+        height={ASSET_H}
         sizes={`${width}px`}
         priority={priority}
         style={{ height, width: "auto" }}

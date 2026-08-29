@@ -1,4 +1,12 @@
 import type { NextConfig } from "next";
+import { initOpenNextCloudflareForDev } from "@opennextjs/cloudflare";
+
+/**
+ * Gives `next dev` access to the Cloudflare bindings declared in
+ * wrangler.jsonc, so local development matches the deployed Worker. No-op in a
+ * production build.
+ */
+void initOpenNextCloudflareForDev();
 
 /**
  * Old `/work-with-us/<slug>` service URLs → new `/solutions/<pillar>/<service>`.
@@ -24,6 +32,21 @@ const nextConfig: NextConfig = {
    */
   ...(process.env.NEXT_DIST_DIR ? { distDir: process.env.NEXT_DIST_DIR } : {}),
   reactStrictMode: true,
+  /**
+   * Cloudflare Workers has no `/_next/image` optimizer. The adapter documents
+   * two ways to get one: bind Cloudflare Images, or supply a custom loader that
+   * rewrites to /cdn-cgi/image. Both are declined here.
+   *
+   * next/image is used in exactly one place — the logo in the header and footer.
+   * Optimizing a single 21 kB static asset does not justify a billed
+   * transformation per unique size (5,000/month free, then $0.50/1,000) plus a
+   * whole class of request-time failure. The asset is instead pre-sized to 576×90
+   * at build time (see components/primitives/logo.tsx) and served directly from
+   * the ASSETS binding.
+   *
+   * Revisit if this site ever serves user- or CMS-supplied imagery.
+   */
+  images: { unoptimized: true },
   experimental: {
     optimizePackageImports: ["lucide-react", "framer-motion"],
   },

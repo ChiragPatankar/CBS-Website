@@ -1,0 +1,30 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "cbs-website",
+  "main": ".open-next/worker.js",
+
+  // nodejs_compat is required by @opennextjs/cloudflare — the Next.js server it
+  // bundles runs on the Node runtime, not the edge runtime. The compatibility
+  // date must be 2024-09-23 or later for that flag to take effect at all;
+  // FinalizationRegistry additionally needs 2025-05-05 or later.
+  "compatibility_date": "2026-08-01",
+  "compatibility_flags": ["nodejs_compat", "global_fetch_strictly_public"],
+
+  // Everything prerendered (37 pages) plus /public is served straight from
+  // static assets; the Worker only runs for POST /api/contact and the redirects.
+  "assets": {
+    "directory": ".open-next/assets",
+    "binding": "ASSETS"
+  },
+
+  "observability": {
+    "enabled": true
+  }
+
+  // Deliberately omitted:
+  //   "services" WORKER_SELF_REFERENCE — only needed for ISR revalidation, and
+  //     nothing in this app sets `revalidate` or uses on-demand revalidation.
+  //   "images" IMAGES binding — see next.config.ts; image optimization is off,
+  //     so there is nothing for it to do and it would bill per transformation.
+  //   "r2_buckets" — the incremental cache backend, again ISR-only.
+}
