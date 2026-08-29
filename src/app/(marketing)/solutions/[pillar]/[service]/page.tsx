@@ -9,7 +9,6 @@ import { ServiceHero } from "@/components/heroes/service-hero";
 import { SectionHeading } from "@/components/composites/section-heading";
 import { FeatureCard, StepItem } from "@/components/composites/feature-card";
 import { FaqSection } from "@/components/composites/faq-section";
-import { ReviewNotice } from "@/components/composites/review-notice";
 import { StatsBand } from "@/components/sections/stats-band";
 import { CTA } from "@/components/sections/cta";
 import { getPillar } from "@/content/pillars";
@@ -77,9 +76,15 @@ export default async function ServicePage({
       />
       {s.faqs.length ? <JsonLd data={faqJsonLd(s.faqs)} /> : null}
 
-      {s.status !== "published" ? (
-        <ReviewNotice kind="draft-unreviewed" note={s.reviewNote} />
-      ) : null}
+      {/* No on-page draft banner. The four `draft-unreviewed` services
+          (web-development, cloud, mobile-apps, ai-ml) read as finished copy by
+          decision of the site owner, who is the authority on whether they
+          describe the real offering.
+
+          `status` still drives `noindex` in generateMetadata above, and those
+          pages are still excluded from the sitemap, so they stay out of search
+          until someone flips them to "published". `reviewNote` is retained in
+          the content files as the record of what needs checking. */}
 
       {/* Composition, visual and atmosphere are chosen per service — no two
           siblings in a pillar share a layout. See heroes/service-hero.tsx. */}

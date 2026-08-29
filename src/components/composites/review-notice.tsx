@@ -4,6 +4,10 @@ import { cn } from "@/lib/utils";
 type Kind = "draft-unreviewed" | "placeholder" | "legal-review";
 
 const COPY: Record<Kind, { label: string; body: string }> = {
+  // Nothing renders this kind any more — the four `draft-unreviewed` service
+  // pages dropped their banner by decision of the site owner. Kept so the
+  // banner can be restored with a one-line change, and because those pages are
+  // still `noindex` on the same `status` field. Not dead by accident.
   "draft-unreviewed": {
     label: "Draft copy",
     body: "This page describes industry-standard practice and has not yet been checked against what CrossBorder actually delivers.",
@@ -24,6 +28,15 @@ const COPY: Record<Kind, { label: string; body: string }> = {
  * Deliberately hard to miss: it is the mechanism that keeps unverified copy and
  * placeholder case studies from reading as fact, so a subtle treatment would
  * defeat the purpose. Paired with `robots: noindex` on the same pages.
+ *
+ * The top padding is header clearance, not taste. This always renders first in
+ * the page flow, and the site header is `fixed` with a transparent background
+ * until you scroll — the marketing layout is a bare `<main>{children}</main>`
+ * and every *section* pays for the header itself with its own `pt-32`. Without
+ * the offset the banner rendered underneath the header, so the notice and the
+ * nav overlapped into an unreadable pile at the top of the page.
+ *
+ * 4rem is the header's `h-16`; the rest is the banner's own breathing room.
  */
 export function ReviewNotice({
   kind,
@@ -39,7 +52,7 @@ export function ReviewNotice({
   return (
     <aside
       className={cn(
-        "border-y border-signal/25 bg-signal/[0.07] px-5 py-3.5 sm:px-6",
+        "border-y border-signal/25 bg-signal/[0.07] px-5 pb-3.5 pt-[calc(4rem+0.875rem)] sm:px-6",
         className
       )}
     >
