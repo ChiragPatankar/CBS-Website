@@ -110,6 +110,10 @@ export function ConvergenceMesh({ className }: { className?: string }) {
           <mask id="cm-mask" maskUnits="userSpaceOnUse" x="0" y="0" width="500" height="400">
             <rect x="0" y="0" width="500" height="400" fill="url(#cm-ramp)" />
           </mask>
+          <radialGradient id="sink-halo">
+            <stop offset="0%" stopColor="var(--color-brand)" stopOpacity={0.45} />
+            <stop offset="100%" stopColor="var(--color-brand)" stopOpacity={0} />
+          </radialGradient>
         </defs>
 
         <g mask="url(#cm-mask)">
@@ -178,7 +182,26 @@ export function ConvergenceMesh({ className }: { className?: string }) {
                     transition: { duration: 3.2, repeat: Infinity, ease: EASE.inOut },
                   })}
             />
+            {/* Halo and a second, slower ring: the point where every line
+                lands should read as a light source, not a dot. */}
+            <circle cx={SINK.x} cy={SINK.y} r={22} fill="url(#sink-halo)" />
+            <motion.circle
+              cx={SINK.x}
+              cy={SINK.y}
+              r={14}
+              fill="none"
+              stroke="var(--color-brand-3)"
+              strokeWidth={0.5}
+              style={{ transformOrigin: `${SINK.x}px ${SINK.y}px` }}
+              {...(reduce
+                ? { opacity: 0.2 }
+                : {
+                    animate: { scale: [1, 1.35, 1], opacity: [0.3, 0, 0.3] },
+                    transition: { duration: 4.4, repeat: Infinity, ease: EASE.inOut, delay: 1.1 },
+                  })}
+            />
             <circle cx={SINK.x} cy={SINK.y} r={2.4} fill="var(--color-brand)" />
+            <circle cx={SINK.x} cy={SINK.y} r={1} fill="#ffe6d6" />
           </motion.g>
         </g>
       </svg>
