@@ -86,7 +86,7 @@ export function SiteHeader() {
                 <Link
                   key={l.href}
                   href={l.href}
-                  className="rounded-md px-3 py-2 text-sm text-muted transition-colors hover:text-fg"
+                  className="whitespace-nowrap rounded-md px-3 py-2 text-sm text-muted transition-colors hover:text-fg"
                 >
                   <span className="link-underline pb-0.5">{l.label}</span>
                 </Link>
