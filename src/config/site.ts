@@ -34,6 +34,7 @@ export const site = {
 
 export const nav = {
   links: [
+    { label: "Cross-Border Services", href: "/cross-border-services" },
     { label: "Work", href: "/work" },
     { label: "Approach", href: "/approach" },
     { label: "About", href: "/about" },
@@ -77,6 +78,7 @@ export const footerNav = {
     { label: "Marketplace Growth", href: "/solutions/marketplace" },
     { label: "Digital Commerce", href: "/solutions/growth" },
     { label: "Technology & AI", href: "/solutions/technology" },
+    { label: "Cross-Border Services", href: "/cross-border-services" },
     { label: "AI Growth Audit", href: "/ai-audit" },
   ],
   Company: [

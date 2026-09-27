@@ -536,3 +536,12 @@
     scroll-behavior: auto !important;
   }
 }
+
+/* Homepage hero scroll cue: a short bar sliding down a hairline track. */
+@keyframes scroll-cue {
+  0% { transform: translateY(-100%); }
+  100% { transform: translateY(300%); }
+}
+.scroll-cue {
+  animation: scroll-cue 1.8s var(--ease-out-expo, ease-out) infinite;
+}

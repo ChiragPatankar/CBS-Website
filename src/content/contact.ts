@@ -133,8 +133,8 @@ export const contact: Contact = {
   submitLabel: "Get started",
 
   seo: {
-    title: "Contact CrossBorder | Book a growth call",
+    title: "Contact Us | Book a Growth Call",
     description:
-      "Tell us about your brand and an ecommerce specialist replies within 24 hours with a view on your growth constraint. Mumbai-based, working with consumer brands across 8+ countries.",
+      "Tell us about your brand and an ecommerce specialist replies within 24 hours. Mumbai-based, working with consumer brands across 8+ countries.",
   },
 };

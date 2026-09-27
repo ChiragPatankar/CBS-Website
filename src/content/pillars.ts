@@ -37,7 +37,7 @@ export const pillars: Pillar[] = [
       "expansion",
     ],
     seo: {
-      title: "Marketplace Solutions | Amazon, Flipkart & global marketplace growth",
+      title: "Marketplace Solutions: Amazon, Flipkart & More",
       description:
         "Cataloging, creative, advertising, account health and cross-border expansion across 15+ marketplaces, run by one team against profit-first benchmarks.",
     },
@@ -63,7 +63,7 @@ export const pillars: Pillar[] = [
     ],
     serviceSlugs: ["meta-ads", "google-ads", "shopify", "retention"],
     seo: {
-      title: "Digital Commerce Growth | Meta & Google ads, Shopify, retention",
+      title: "Performance Marketing: Meta, Google & Shopify",
       description:
         "Profit-first media buying, conversion-focused Shopify builds and lifecycle retention across email, SMS and WhatsApp, run as a single full-funnel system.",
     },
@@ -89,7 +89,7 @@ export const pillars: Pillar[] = [
     ],
     serviceSlugs: ["web-development", "mobile-apps", "cloud", "ai-ml"],
     seo: {
-      title: "Technology & AI | Commerce engineering, cloud and applied ML",
+      title: "Ecommerce Technology & AI Development",
       description:
         "Custom web and mobile commerce builds, cloud infrastructure and applied AI for forecasting, creative testing and catalog automation. You own what we build.",
     },

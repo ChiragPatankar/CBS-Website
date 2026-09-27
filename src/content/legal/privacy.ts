@@ -125,7 +125,7 @@ export const privacy: LegalDoc = {
     },
   ],
   seo: {
-    title: "Privacy Policy | CrossBorder Business Solution",
+    title: "Privacy Policy",
     description:
       "How CrossBorder Business Solution collects, uses, stores and deletes personal data on cbbusinesssolution.com, and how to exercise your privacy rights.",
   },

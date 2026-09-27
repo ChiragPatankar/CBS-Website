@@ -16,7 +16,7 @@ import { services, serviceHref } from "@/content/services";
 import { pageMetadata, JsonLd, breadcrumbJsonLd } from "@/lib/seo";
 
 export const metadata: Metadata = pageMetadata({
-  title: "Solutions — marketplace, growth and technology",
+  title: "Ecommerce Growth Services & Solutions",
   description:
     "The full CrossBorder portfolio: marketplace operations, full-funnel commerce growth, and the technology underneath both. Twelve services across three pillars.",
   path: "/solutions",

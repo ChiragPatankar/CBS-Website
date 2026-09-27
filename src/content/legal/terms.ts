@@ -128,8 +128,8 @@ export const terms: LegalDoc = {
     },
   ],
   seo: {
-    title: "Terms of Service | CrossBorder Business Solution",
+    title: "Terms of Service",
     description:
-      "The terms covering CrossBorder ecommerce growth engagements: scope, fees, client responsibilities, intellectual property, confidentiality, liability and Mumbai jurisdiction.",
+      "The terms for CrossBorder engagements: scope, fees, client responsibilities, intellectual property, confidentiality, liability and jurisdiction.",
   },
 };
