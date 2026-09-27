@@ -27,24 +27,27 @@ const jetBrainsMono = JetBrains_Mono({
 export const metadata: Metadata = {
   metadataBase: new URL("https://cbbusinesssolution.com"),
   title: {
-    default: "CrossBorder — AI-Driven Ecommerce Growth, Built on Profit-First Principles",
+    default: "CrossBorder: Ecommerce Growth & Cross-Border Selling",
     template: "%s | CrossBorder",
   },
   description:
-    "CrossBorder is a profit-first ecommerce growth partner. We scale consumer brands across marketplaces and DTC with AI-driven performance, creative, and retention — 100+ brands, 4.3× average ROAS, 15+ marketplaces.",
+    "Profit-first growth partner for consumer brands: marketplaces, ads and Shopify, plus IOR, tax and compliance in the US, EU, UK and Gulf. 100+ brands scaled.",
   keywords: [
     "ecommerce growth agency",
     "marketplace growth",
     "profit-first ecommerce",
     "Amazon growth agency",
     "AI ecommerce growth",
+    "importer of record services",
+    "cross-border ecommerce compliance",
   ],
   openGraph: {
     type: "website",
-    title: "CrossBorder — AI-Driven Ecommerce Growth",
+    title: "CrossBorder: Ecommerce Growth & Cross-Border Selling",
     description:
-      "Profit-first growth across marketplaces and DTC. 100+ brands scaled, 4.3× average ROAS.",
+      "Profit-first growth across marketplaces and DTC, plus import, tax and compliance in every market you sell into. 100+ brands scaled.",
     siteName: "CrossBorder",
+    locale: "en_IN",
   },
   robots: { index: true, follow: true },
 };

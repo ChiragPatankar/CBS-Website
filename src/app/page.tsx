@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { MotionProvider } from "@/components/providers/motion-provider";
-import { JsonLd, organizationJsonLd } from "@/lib/seo";
+import { JsonLd, organizationJsonLd, websiteJsonLd } from "@/lib/seo";
 import { SiteHeader } from "@/components/sections/site-header";
 import { SiteFooter } from "@/components/sections/site-footer";
 import { FloatingAssistant } from "@/components/sections/floating-assistant";
@@ -33,6 +33,15 @@ import { CTA } from "@/components/sections/cta";
  */
 export const metadata: Metadata = {
   alternates: { canonical: "/" },
+  openGraph: {
+    type: "website",
+    url: "/",
+    siteName: "CrossBorder",
+    locale: "en_IN",
+    title: "CrossBorder: Ecommerce Growth & Cross-Border Selling",
+    description:
+      "Profit-first growth across marketplaces and DTC, plus import, tax and compliance in every market you sell into. 100+ brands scaled.",
+  },
 };
 
 export default function Home() {
@@ -41,6 +50,7 @@ export default function Home() {
       {/* Organisation graph lives on the homepage only — repeating it per route
           gives crawlers duplicate entities for the same business. */}
       <JsonLd data={organizationJsonLd()} />
+      <JsonLd data={websiteJsonLd()} />
       <SiteHeader />
       <main id="main">
         <ChannelStackHero />

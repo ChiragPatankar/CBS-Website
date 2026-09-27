@@ -158,8 +158,8 @@ export const about: About = {
   },
 
   seo: {
-    title: "About CrossBorder | Profit-first ecommerce growth partner, Mumbai",
+    title: "About Us: Ecommerce Growth Partner in Mumbai",
     description:
-      "An integrated ecommerce growth partner for consumer brands: 100+ brands scaled, 15+ marketplaces operated, 85% annual client retention. What we believe and how we work.",
+      "An integrated ecommerce growth partner for consumer brands: 100+ brands scaled, 15+ marketplaces operated, 85% annual client retention. How we work.",
   },
 };

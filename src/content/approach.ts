@@ -115,8 +115,8 @@ export const approach: Approach = {
   ],
 
   seo: {
-    title: "Our Approach | Profit-first ecommerce growth method",
+    title: "Our Approach: Profit-First Ecommerce Growth",
     description:
-      "Diagnose, prioritise, build, operate, compound. How CrossBorder runs ecommerce growth against contribution margin, across the Launch & Growth and Scale & Optimize motions.",
+      "Diagnose, prioritise, build, operate, compound: how CrossBorder runs ecommerce growth against contribution margin rather than revenue alone.",
   },
 };
